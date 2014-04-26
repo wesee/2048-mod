@@ -41,12 +41,12 @@ if ($_POST['clear'])
 if ($_POST['read'])
 {
 	$moves = array();
-	$query = 'SELECT `move` FROM `moves` ORDER BY `id`;';
+	$query = 'SELECT `from`, `move` FROM `moves` ORDER BY `id`;';
 	$result = $MYSQLI->query($query);
 
 	while ($move = $result->fetch_assoc())
 	{
-		$moves[] = $move['move'];
+		$moves[] = $move;
 	}
 	$result->close();
 
