@@ -67,7 +67,145 @@ function move($from, $move)
 		'MySQL Error: ' . $MYSQLI->error.__LINE__
 	);
 	$stmt->close();
+	move_grid($move);
 	$GRID[$x][$y] = $tile;
+}
+
+function move_grid($move)
+{
+	global $GRID;
+	$merged = array();
+
+	for ($x = 0; $x < 4; $x++)
+	{
+		for ($y = 0; $y < 4; $y++)
+		{
+			$merged[$x][$y] = false;
+		}
+	}
+
+	switch ($move)
+	{
+		// Up
+		case 0:
+			for ($y = 1; $y < 4; $y++)
+			{
+				for ($x = 0; $x < 4; $x++)
+				{
+					$y2 = $y;
+
+					while ($y2 >= 0 && $GRID[$x][$y2 - 1] == -1)
+					{
+						$tile = $GRID[$x][$y2];
+						$GRID[$x][$y2] = -1;
+						$y2--;
+						$GRID[$x][$y2] = $tile;
+					}
+
+					if (
+						$y2 >= 0 && $GRID[$x][$y2] == $GRID[$x][$y2 - 1] &&
+						!$merged[$x][$y2 - 1]
+					)
+					{
+						$GRID[$x][$y2] = -1;
+						$y2--;
+						$GRID[$x][$y2] = $tile * 2;
+						$merged[$x][$y2] = true;
+					}
+				}
+			}
+		break;
+
+		// Right
+		case 1:
+			for ($x = 2; $x >= 0; $x--)
+			{
+				for ($y = 0; $y < 4; $y++)
+				{
+					$x2 = $x;
+
+					while ($x2 < 4 && $GRID[$x2 + 1][$y] == -1)
+					{
+						$tile = $GRID[$x2][$y];
+						$GRID[$x2][$y] = -1;
+						$x2++;
+						$GRID[$x2][$y] = $tile;
+					}
+
+					if (
+						$x2 < 4 && $GRID[$x2][$y] == $GRID[$x2 + 1][$y] &&
+						!$merged[$x2 + 1][$y]
+					)
+					{
+						$GRID[$x2][$y] = -1;
+						$x2++;
+						$GRID[$x2][$y] = $tile * 2;
+						$merged[$x2][$y] = true;
+					}
+				}
+			}
+		break;
+
+		// Down
+		case 2:
+			for ($y = 2; $y >= 0; $y--)
+			{
+				for ($x = 0; $x < 4; $x++)
+				{
+					$y2 = $y;
+
+					while ($y2 < 4 && $GRID[$x][$y2 + 1] == -1)
+					{
+						$tile = $GRID[$x][$y2];
+						$GRID[$x][$y2] = -1;
+						$y2++;
+						$GRID[$x][$y2] = $tile;
+					}
+
+					if (
+						$y2 < 4 && $GRID[$x][$y2] == $GRID[$x][$y2 + 1] &&
+						!$merged[$x][$y2 + 1]
+					)
+					{
+						$GRID[$x][$y2] = -1;
+						$y2++;
+						$GRID[$x][$y2] = $tile * 2;
+						$merged[$x][$y2] = true;
+					}
+				}
+			}
+		break;
+
+		// Left
+		case 3:
+			for ($x = 1; $x < 4; $x++)
+			{
+				for ($y = 0; $y < 4; $y++)
+				{
+					$x2 = $x;
+
+					while ($x2 >= 0 && $GRID[$x2 - 1][$y] == -1)
+					{
+						$tile = $GRID[$x2][$y];
+						$GRID[$x2][$y] = -1;
+						$x2--;
+						$GRID[$x2][$y] = $tile;
+					}
+
+					if (
+						$x2 >= 0 && $GRID[$x2][$y] == $GRID[$x2 - 1][$y] &&
+						!$merged[$x2 - 1][$y]
+					)
+					{
+						$GRID[$x2][$y] = -1;
+						$x2--;
+						$GRID[$x2][$y] = $tile * 2;
+						$merged[$x2][$y] = true;
+					}
+				}
+			}
+		break;
+	}
 }
 
 function move_parse($text)
@@ -98,7 +236,7 @@ function read()
 	while ($move = $result->fetch_assoc())
 	{
 		$moves[] = $move;
-
+		move_grid($move['move']);
 		$GRID[$move['x']][$move['y']] = $move['tile'];
 	}
 	$result->close();
