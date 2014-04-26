@@ -10,16 +10,22 @@ if ($_POST['text'])
 {
 	$moves_valid = array('up', 'right', 'down', 'left');
 	$text = trim(strtolower($_POST['text']));
-	$move = array_search($text, $moves_valid);
 
-	if ($move !== false)
+	foreach ($moves_valid as $move => $str)
 	{
-		// Insert move into database.
-		$query = 'INSERT INTO `moves` (`move`) VALUES (?);';
-		$result = $MYSQLI->prepare($query);
-		$result->bind_param('i', $move);
-		$result->execute() or die('MySQL Error: ' . $MYSQLI->error.__LINE__);
-		$result->close();
+		$pos = strpos($text, $str);
+
+		if ($pos !== false)
+		{
+			// Insert move into database.
+			$query = 'INSERT INTO `moves` (`move`) VALUES (?);';
+			$result = $MYSQLI->prepare($query);
+			$result->bind_param('i', $move);
+			$result->execute() or die(
+				'MySQL Error: ' . $MYSQLI->error.__LINE__
+			);
+			$result->close();
+		}
 	}
 }
 
