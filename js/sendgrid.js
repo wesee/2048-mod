@@ -1,5 +1,5 @@
 var moves = []
-var read = $.post('php/sendgrid.php', { 'read': true });
+var moving = false;
 
 function move_feed(feed)
 {
@@ -7,11 +7,13 @@ function move_feed(feed)
 
 	if (feed.length < 1)
 	{
+		moving = false;
 		return;
 	}
 
 	move = feed.shift();
 	gm.move(move);
+	moves.push(move);
 
 	setTimeout(
 		function ()
@@ -22,11 +24,26 @@ function move_feed(feed)
 	);
 }
 
-read.done
-(
-	function (data)
+function read()
+{
+	if (moving)
 	{
-		var feed = jQuery.parseJSON(data);
-		move_feed(feed);
+		return;
 	}
-);
+
+	var result = $.post('php/sendgrid.php', { 'read': true });
+
+	result.done
+	(
+		function (data)
+		{
+			// Feed the new moves.
+			var feed = jQuery.parseJSON(data).slice(moves.length);
+			moving = true;
+			move_feed(feed);
+		}
+	);
+}
+
+read();
+setInterval(read, 500);
