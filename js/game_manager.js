@@ -18,6 +18,7 @@ GameManager.prototype.restart = function () {
   this.storageManager.clearGameState();
   this.actuator.continueGame(); // Clear the game won/lost message
   this.setup();
+  $.post('php/sendgrid.php', { 'clear': true });
 };
 
 // Keep playing after winning (allows going over 2048)

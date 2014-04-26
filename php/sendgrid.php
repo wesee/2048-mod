@@ -19,14 +19,22 @@ if ($_POST['text'])
 		{
 			// Insert move into database.
 			$query = 'INSERT INTO `moves` (`move`) VALUES (?);';
-			$result = $MYSQLI->prepare($query);
-			$result->bind_param('i', $move);
-			$result->execute() or die(
+			$stmt = $MYSQLI->prepare($query);
+			$stmt->bind_param('i', $move);
+			$stmt->execute() or die(
 				'MySQL Error: ' . $MYSQLI->error.__LINE__
 			);
-			$result->close();
+			$stmt->close();
 		}
 	}
+}
+
+// Clear Moves.
+if ($_POST['clear'])
+{
+	$query = 'TRUNCATE TABLE `moves`;';
+	$stmt = $MYSQLI->query($query);
+	$stmt->close();
 }
 
 // Read Moves.
@@ -40,6 +48,7 @@ if ($_POST['read'])
 	{
 		$moves[] = $move['move'];
 	}
+	$result->close();
 
 	echo json_encode($moves);
 }
