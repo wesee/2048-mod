@@ -7,6 +7,7 @@ $MYSQLI = new mysqli(
 
 if ($_POST['read'])
 {
-	echo 'Foo';
+	$moves = array(0, 1, 2, 3);
+	echo json_encode($moves);
 }
 ?>
