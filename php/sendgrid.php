@@ -26,7 +26,7 @@ function clear()
 	$stmt->close();
 }
 
-function initialize()
+function clear_grid()
 {
 	global $GRID;
 
@@ -37,6 +37,13 @@ function initialize()
 			$GRID[$x][$y] = -1;
 		}
 	}
+}
+
+function initialize()
+{
+	global $GRID;
+
+	clear_grid();
 
 	for ($tile = 0; $tile < 2; $tile++)
 	{
@@ -81,7 +88,8 @@ function move_parse($text)
 
 function read()
 {
-	global $MYSQLI;
+	global $GRID, $MYSQLI;
+	clear_grid();
 	$moves = array();
 	$query = 'SELECT `from`, `move`, `tile`, `x`, `y`
 		FROM `moves` ORDER BY `id`;';
@@ -90,6 +98,8 @@ function read()
 	while ($move = $result->fetch_assoc())
 	{
 		$moves[] = $move;
+
+		$GRID[$move['x']][$move['y']] = $move['tile'];
 	}
 	$result->close();
 
@@ -141,6 +151,6 @@ if ($_POST['read'])
 		$moves = read();
 	}
 
-	echo json_encode($moves);
+	echo json_encode(array('grid' => $GRID, 'moves' => $moves));
 }
 ?>

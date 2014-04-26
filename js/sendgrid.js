@@ -12,6 +12,34 @@ function clear()
 	$('#log').css('overflow-y', 'hidden');
 }
 
+function grid_text(grid)
+{
+	text = '';
+
+	for (var y = 0; y < 4; y++)
+	{
+		text += '|';
+
+		for (var x = 0; x < 4; x++)
+		{
+			if (grid[x][y] >= 2)
+			{
+				text += grid[x][y];
+			}
+			else
+			{
+				text += ' ';
+			}
+
+			text += '|';
+		}
+
+		text += '\n';
+	}
+
+	return text;
+}
+
 function move_feed(feed, rate)
 {
 	var move;
@@ -72,9 +100,11 @@ function read(rate)
 		function (data)
 		{
 			// Feed the new moves.
-			var feed = jQuery.parseJSON(data).slice(moves.length);
+			var feed = jQuery.parseJSON(data);
+			var moves_feed = feed.moves.slice(moves.length);
 			moving = true;
-			move_feed(feed, rate);
+			move_feed(moves_feed, rate);
+			$('#grid').text(grid_text(feed.grid));
 		}
 	);
 }
