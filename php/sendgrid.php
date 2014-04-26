@@ -7,7 +7,15 @@ $MYSQLI = new mysqli(
 
 if ($_POST['read'])
 {
-	$moves = array(0, 1, 2, 3, 0);
+	$moves = array();
+	$query = 'SELECT `move` FROM `moves`;';
+	$result = $MYSQLI->query($query);
+
+	while ($move = $result->fetch_assoc())
+	{
+		$moves[] = $move['move'];
+	}
+
 	echo json_encode($moves);
 }
 ?>

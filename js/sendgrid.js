@@ -1,5 +1,7 @@
+var move_rate = 500;
 var moves = []
 var moving = false;
+var refresh = 5000;
 
 function move_feed(feed)
 {
@@ -20,7 +22,7 @@ function move_feed(feed)
 		{
 			move_feed(feed);
 		},
-		500
+		move_rate
 	);
 }
 
@@ -46,4 +48,4 @@ function read()
 }
 
 read();
-setInterval(read, 500);
+setInterval(read, refresh);
