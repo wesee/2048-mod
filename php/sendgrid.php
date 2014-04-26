@@ -18,9 +18,9 @@ if ($_POST['text'])
 		if ($pos !== false)
 		{
 			// Insert move into database.
-			$query = 'INSERT INTO `moves` (`move`) VALUES (?);';
+			$query = 'INSERT INTO `moves` (`from`, `move`) VALUES (?, ?);';
 			$stmt = $MYSQLI->prepare($query);
-			$stmt->bind_param('i', $move);
+			$stmt->bind_param('si', $_POST['from'], $move);
 			$stmt->execute() or die(
 				'MySQL Error: ' . $MYSQLI->error.__LINE__
 			);

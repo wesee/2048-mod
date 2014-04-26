@@ -1,7 +1,13 @@
-var moves = []
+var moves;
 var moving = false;
 var rate_move = 500;
 var rate_refresh = 5000;
+
+function clear()
+{
+	moves = [];
+	$.post('php/sendgrid.php', { 'clear': true });
+}
 
 function move_feed(feed)
 {
@@ -47,5 +53,6 @@ function read()
 	);
 }
 
+clear();
 read();
 setInterval(read, rate_refresh);
