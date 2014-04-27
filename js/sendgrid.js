@@ -13,7 +13,7 @@ function clear()
 {
 	//moves = [];
 	//$.post('php/sendgrid.php', { 'clear': true });
-	$('#log').html('Move log:<br /><br />Game started.<br />');
+	$('#log').html('Game started.<br />');
 	$('#log').css('overflow-y', 'hidden');
 }
 
@@ -79,9 +79,10 @@ function move_feed(feed, rate)
 			').<br />'
 	);
 
-	if (moves.length >= 13)
+	if (moves.length >= 12)
 	{
 		$('#log').css('overflow-y', 'scroll');
+		$('#log').scrollTop($('#log')[0].scrollHeight);
 	}
 
 	if (rate > 0)
