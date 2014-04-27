@@ -103,10 +103,12 @@ function move_grid($move)
 					}
 
 					if (
-						$y2 >= 0 && $GRID[$x][$y2] == $GRID[$x][$y2 - 1] &&
+						$y2 >= 0 && $GRID[$x][$y2] != -1 &&
+						$GRID[$x][$y2] == $GRID[$x][$y2 - 1] &&
 						!$merged[$x][$y2 - 1]
 					)
 					{
+						$tile = $GRID[$x][$y2];
 						$GRID[$x][$y2] = -1;
 						$y2--;
 						$GRID[$x][$y2] = $tile * 2;
@@ -133,10 +135,12 @@ function move_grid($move)
 					}
 
 					if (
-						$x2 < 4 && $GRID[$x2][$y] == $GRID[$x2 + 1][$y] &&
+						$x2 < 4 && $GRID[$x2][$y] != -1 &&
+						$GRID[$x2][$y] == $GRID[$x2 + 1][$y] &&
 						!$merged[$x2 + 1][$y]
 					)
 					{
+						$tile = $GRID[$x2][$y];
 						$GRID[$x2][$y] = -1;
 						$x2++;
 						$GRID[$x2][$y] = $tile * 2;
@@ -163,10 +167,12 @@ function move_grid($move)
 					}
 
 					if (
-						$y2 < 4 && $GRID[$x][$y2] == $GRID[$x][$y2 + 1] &&
+						$y2 < 4 && $GRID[$x][$y2] != -1 &&
+						$GRID[$x][$y2] == $GRID[$x][$y2 + 1] &&
 						!$merged[$x][$y2 + 1]
 					)
 					{
+						$tile = $GRID[$x][$y2];
 						$GRID[$x][$y2] = -1;
 						$y2++;
 						$GRID[$x][$y2] = $tile * 2;
@@ -193,10 +199,12 @@ function move_grid($move)
 					}
 
 					if (
-						$x2 >= 0 && $GRID[$x2][$y] == $GRID[$x2 - 1][$y] &&
+						$x2 >= 0 && $GRID[$x2][$y] != -1 &&
+						$GRID[$x2][$y] == $GRID[$x2 - 1][$y] &&
 						!$merged[$x2 - 1][$y]
 					)
 					{
+						$tile = $GRID[$x2][$y];
 						$GRID[$x2][$y] = -1;
 						$x2--;
 						$GRID[$x2][$y] = $tile * 2;
