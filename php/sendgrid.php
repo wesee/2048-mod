@@ -54,7 +54,12 @@ function initialize()
 function move($from, $move)
 {
 	global $GRID, $MYSQLI;
-	move_grid($move);
+
+	if (!move_grid($move))
+	{
+		return;
+	}
+
 	$random = tile_random();
 	$tile = $random['tile'];
 	$x = $random['x'];
@@ -75,6 +80,7 @@ function move_grid($move)
 {
 	global $GRID;
 	$merged = array();
+	$moved = false;
 
 	for ($x = 0; $x < 4; $x++)
 	{
@@ -92,6 +98,11 @@ function move_grid($move)
 			{
 				for ($x = 0; $x < 4; $x++)
 				{
+					if ($GRID[$x][$y] == -1)
+					{
+						continue;
+					}
+
 					$y2 = $y;
 
 					while ($y2 >= 0 && $GRID[$x][$y2 - 1] == -1)
@@ -100,11 +111,11 @@ function move_grid($move)
 						$GRID[$x][$y2] = -1;
 						$y2--;
 						$GRID[$x][$y2] = $tile;
+						$moved = true;
 					}
 
 					if (
-						$y2 >= 0 && $GRID[$x][$y2] != -1 &&
-						$GRID[$x][$y2] == $GRID[$x][$y2 - 1] &&
+						$y2 >= 0 && $GRID[$x][$y2] == $GRID[$x][$y2 - 1] &&
 						!$merged[$x][$y2 - 1]
 					)
 					{
@@ -113,6 +124,7 @@ function move_grid($move)
 						$y2--;
 						$GRID[$x][$y2] = $tile * 2;
 						$merged[$x][$y2] = true;
+						$moved = true;
 					}
 				}
 			}
@@ -124,6 +136,11 @@ function move_grid($move)
 			{
 				for ($y = 0; $y < 4; $y++)
 				{
+					if ($GRID[$x][$y] == -1)
+					{
+						continue;
+					}
+
 					$x2 = $x;
 
 					while ($x2 < 4 && $GRID[$x2 + 1][$y] == -1)
@@ -132,11 +149,11 @@ function move_grid($move)
 						$GRID[$x2][$y] = -1;
 						$x2++;
 						$GRID[$x2][$y] = $tile;
+						$moved = true;
 					}
 
 					if (
-						$x2 < 4 && $GRID[$x2][$y] != -1 &&
-						$GRID[$x2][$y] == $GRID[$x2 + 1][$y] &&
+						$x2 < 4 && $GRID[$x2][$y] == $GRID[$x2 + 1][$y] &&
 						!$merged[$x2 + 1][$y]
 					)
 					{
@@ -145,6 +162,7 @@ function move_grid($move)
 						$x2++;
 						$GRID[$x2][$y] = $tile * 2;
 						$merged[$x2][$y] = true;
+						$moved = true;
 					}
 				}
 			}
@@ -156,6 +174,11 @@ function move_grid($move)
 			{
 				for ($x = 0; $x < 4; $x++)
 				{
+					if ($GRID[$x][$y] == -1)
+					{
+						continue;
+					}
+
 					$y2 = $y;
 
 					while ($y2 < 4 && $GRID[$x][$y2 + 1] == -1)
@@ -164,11 +187,11 @@ function move_grid($move)
 						$GRID[$x][$y2] = -1;
 						$y2++;
 						$GRID[$x][$y2] = $tile;
+						$moved = true;
 					}
 
 					if (
-						$y2 < 4 && $GRID[$x][$y2] != -1 &&
-						$GRID[$x][$y2] == $GRID[$x][$y2 + 1] &&
+						$y2 < 4 && $GRID[$x][$y2] == $GRID[$x][$y2 + 1] &&
 						!$merged[$x][$y2 + 1]
 					)
 					{
@@ -177,6 +200,7 @@ function move_grid($move)
 						$y2++;
 						$GRID[$x][$y2] = $tile * 2;
 						$merged[$x][$y2] = true;
+						$moved = true;
 					}
 				}
 			}
@@ -188,6 +212,11 @@ function move_grid($move)
 			{
 				for ($y = 0; $y < 4; $y++)
 				{
+					if ($GRID[$x][$y] == -1)
+					{
+						continue;
+					}
+
 					$x2 = $x;
 
 					while ($x2 >= 0 && $GRID[$x2 - 1][$y] == -1)
@@ -196,11 +225,11 @@ function move_grid($move)
 						$GRID[$x2][$y] = -1;
 						$x2--;
 						$GRID[$x2][$y] = $tile;
+						$moved = true;
 					}
 
 					if (
-						$x2 >= 0 && $GRID[$x2][$y] != -1 &&
-						$GRID[$x2][$y] == $GRID[$x2 - 1][$y] &&
+						$x2 >= 0 && $GRID[$x2][$y] == $GRID[$x2 - 1][$y] &&
 						!$merged[$x2 - 1][$y]
 					)
 					{
@@ -209,11 +238,17 @@ function move_grid($move)
 						$x2--;
 						$GRID[$x2][$y] = $tile * 2;
 						$merged[$x2][$y] = true;
+						$moved = true;
 					}
 				}
 			}
 		break;
+
+		default:
+			return true;
 	}
+
+	return $moved;
 }
 
 function move_parse($text)
@@ -299,5 +334,21 @@ if ($_POST['read'])
 	}
 
 	echo json_encode(array('grid' => $GRID, 'moves' => $moves));
+	exit;
 }
 ?>
+
+<form action="#" method="post">
+<p>
+	<input type="hidden" name="from" value="Brandon Evans" />
+	<input type="submit" name="text" value="Up" />
+	<input type="submit" name="text" value="Right" />
+	<input type="submit" name="text" value="Down" />
+	<input type="submit" name="text" value="Left" />
+</p>
+
+<p>
+	<input type="submit" name="read" value="Read" />
+	<input type="submit" name="clear" value="Clear" />
+</p>
+</form>
