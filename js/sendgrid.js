@@ -63,7 +63,7 @@ function move_feed(feed, rate)
 		gm.move(move.move);
 		$('#log').append(
 			move.from + ' sent move ' + moves_valid[move.move] + ' at ' +
-				timestamp_text(move.time) + '.<br />'
+				timestamp_text(move.time) + '<br />'
 		);
 	}
 
