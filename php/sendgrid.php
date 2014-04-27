@@ -54,6 +54,7 @@ function initialize()
 function move($from, $move)
 {
 	global $GRID, $MYSQLI;
+	move_grid($move);
 	$random = tile_random();
 	$tile = $random['tile'];
 	$x = $random['x'];
@@ -67,7 +68,6 @@ function move($from, $move)
 		'MySQL Error: ' . $MYSQLI->error.__LINE__
 	);
 	$stmt->close();
-	move_grid($move);
 	$GRID[$x][$y] = $tile;
 }
 
