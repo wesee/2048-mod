@@ -72,7 +72,7 @@ function move_feed(feed, rate)
 			').<br />'
 	);
 
-	if (moves.length >= 24)
+	if (moves.length >= 13)
 	{
 		$('#log').css('overflow-y', 'scroll');
 	}
