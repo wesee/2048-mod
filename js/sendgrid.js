@@ -9,14 +9,6 @@ String.prototype.repeat = function( num )
     return new Array( num + 1 ).join( this );
 }
 
-function clear()
-{
-	//moves = [];
-	//$.post('php/sendgrid.php', { 'clear': true });
-	$('#log').html('Game started.<br />');
-	$('#log').css('overflow-y', 'hidden');
-}
-
 function grid_text(grid)
 {
 	text = '';
@@ -44,6 +36,12 @@ function grid_text(grid)
 	}
 
 	return text;
+}
+
+function log_reset()
+{
+	$('#log').html('Game started.<br />');
+	$('#log').css('overflow-y', 'hidden');
 }
 
 function move_feed(feed, rate)
@@ -126,13 +124,13 @@ function read(rate)
 			{
 				moves = [];
 				gm.restart();
+				log_reset();
 			}
 
 			moves_feed = feed.moves.slice(moves.length);
 			moving = true;
 			move_feed(moves_feed, rate);
 			gm.storageManager.setBestScore(feed.best_score);
-			gm.actuator.bestContainer.textContent = feed.best_score;
 			$('#grid').text(grid_text(feed.grid));
 		}
 	);
@@ -145,7 +143,7 @@ function timestamp_text(timestamp)
 		date.getSeconds() + '.' + date.getMilliseconds();
 }
 
-clear();
+log_reset();
 read(0);
 setInterval(
 	function ()

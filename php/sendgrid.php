@@ -50,6 +50,7 @@ function clear()
 	global $MYSQLI;
 	$query = 'TRUNCATE TABLE `moves`;';
 	$MYSQLI->query($query);
+	return 'Success';
 }
 
 function clear_grid()
@@ -63,6 +64,19 @@ function clear_grid()
 			$GRID[$x][$y] = -1;
 		}
 	}
+}
+
+function game_over()
+{
+	for ($move = 0; $move < 4; $move++)
+	{
+		if (move_grid($move))
+		{
+			return;
+		}
+	}
+
+	clear();
 }
 
 function initialize()
@@ -83,7 +97,7 @@ function move($from, $move)
 
 	if (!move_grid($move))
 	{
-		return;
+		return 'Failure';
 	}
 
 	$random = tile_random();
@@ -100,6 +114,8 @@ function move($from, $move)
 	);
 	$stmt->close();
 	$GRID[$x][$y] = $tile;
+
+	return 'Success';
 }
 
 function move_grid($move)
@@ -342,16 +358,17 @@ if ($_POST['text'])
 
 	if ($move !== false)
 	{
-		move($_POST['from'], $move);
+		echo move($_POST['from'], $move);
 	}
 
 	best_score_update();
+	game_over();
 }
 
 // Clear Moves.
 elseif ($_POST['clear'])
 {
-	clear();
+	echo clear();
 }
 
 // Read Moves.
@@ -366,6 +383,7 @@ elseif ($_POST['read'])
 	}
 
 	best_score_update();
+	game_over();
 	echo json_encode(
 		array(
 			'best_score' => best_score(), 'grid' => $GRID, 'moves' => $moves
