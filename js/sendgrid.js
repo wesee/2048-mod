@@ -1,7 +1,11 @@
+var mobile = (
+	/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(
+		navigator.userAgent.toLowerCase()
+	)
+);
 var moves = [];
 var moves_valid = ['Up', 'Right', 'Down', 'Left'];
 var moving = false;
-var rate_move = 500;
 var rate_refresh = 1000;
 
 String.prototype.repeat = function( num )
@@ -44,7 +48,7 @@ function log_reset()
 	$('#log').css('overflow-y', 'hidden');
 }
 
-function move_feed(feed, rate)
+function move_feed(feed)
 {
 	var move;
 	var tile;
@@ -77,29 +81,16 @@ function move_feed(feed, rate)
 			').<br />'
 	);
 
-	if (moves.length >= 12)
+	if (moves.length >= 14 || (mobile && moves.length >= 7))
 	{
 		$('#log').css('overflow-y', 'scroll');
 		$('#log').scrollTop($('#log')[0].scrollHeight);
 	}
 
-	if (rate > 0)
-	{
-		setTimeout(
-			function ()
-			{
-				move_feed(feed, rate);
-			},
-			rate
-		);
-	}
-	else
-	{
-		move_feed(feed, rate);
-	}
+	move_feed(feed);
 }
 
-function read(rate)
+function read()
 {
 	var moves_feed;
 
@@ -129,7 +120,7 @@ function read(rate)
 
 			moves_feed = feed.moves.slice(moves.length);
 			moving = true;
-			move_feed(moves_feed, rate);
+			move_feed(moves_feed);
 			gm.storageManager.setBestScore(feed.best_score);
 			$('#grid').text(grid_text(feed.grid));
 		}
@@ -143,12 +134,17 @@ function timestamp_text(timestamp)
 		date.getSeconds() + '.' + date.getMilliseconds();
 }
 
-log_reset();
-read(0);
-setInterval(
-	function ()
-	{
-		read(rate_move);
-	},
-	rate_refresh
+$(document).ready
+(
+    function ()
+    {
+		if (mobile)
+		{
+			$('#log').css('height', '295px');
+		}
+
+		log_reset();
+		read();
+		setInterval(read, rate_refresh);
+	}
 );
