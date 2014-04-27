@@ -45,7 +45,6 @@ function grid_text(grid)
 function log_reset()
 {
 	$('#log').html('Game started.<br />');
-	$('#log').css('overflow-y', 'hidden');
 }
 
 function move_feed(feed)
@@ -66,9 +65,12 @@ function move_feed(feed)
 	{
 		gm.move(move.move);
 		$('#log').append(
-			move.from + ' sent move ' + moves_valid[move.move] + ' at ' +
-				timestamp_text(move.time) + '<br />'
+			document.createTextNode(
+				move.from + ' sent move ' + moves_valid[move.move] + ' at ' +
+					timestamp_text(move.time)
+			)
 		);
+		$('#log').append('<br />');
 	}
 
 	tile = new Tile(
@@ -80,12 +82,7 @@ function move_feed(feed)
 		move.tile + ' tile generated at (' + move.x + ', ' + move.y +
 			').<br />'
 	);
-
-	if (moves.length >= 14 || (mobile && moves.length >= 7))
-	{
-		$('#log').css('overflow-y', 'scroll');
-		$('#log').scrollTop($('#log')[0].scrollHeight);
-	}
+	$('#log').scrollTop($('#log')[0].scrollHeight);
 
 	move_feed(feed);
 }

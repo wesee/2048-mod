@@ -363,7 +363,8 @@ if ($_POST['text'])
 
 	if ($move !== false)
 	{
-		echo move($_POST['from'], $move);
+		$from = explode(' <', $_POST['from']);
+		echo move($from[0], $move);
 	}
 
 	best_score_update();
