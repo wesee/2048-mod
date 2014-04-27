@@ -300,17 +300,22 @@ function move_grid($move)
 function move_parse($text)
 {
 	$moves_valid = array('up', 'right', 'down', 'left');
+	$move = false;
+	$move_pos = false;
 	$text = trim(strtolower($text));
 
-	foreach ($moves_valid as $move => $str)
+	foreach ($moves_valid as $m => $str)
 	{
-		if (strpos($text, $str) !== false)
+		$pos = strpos($text, $str);
+
+		if ($pos !== false && ($move_pos === false || $pos < $move_pos))
 		{
-			return $move;
+			$move = $m;
+			$move_pos = $pos;
 		}
 	}
 
-	return false;
+	return ($move_pos !== false) ? $move : false;
 }
 
 function read()
