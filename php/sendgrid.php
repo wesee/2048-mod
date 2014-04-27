@@ -5,6 +5,7 @@ $MYSQLI = new mysqli(
 	$CONFIG['host'], $CONFIG['username'], $CONFIG['password'], $CONFIG['db']
 );
 $GRID = array();
+$SCORE = 0;
 
 for ($x = 0; $x < 4; $x++)
 {
@@ -16,6 +17,32 @@ for ($x = 0; $x < 4; $x++)
 	}
 
 	$GRID[] = $column;
+}
+
+function best_score()
+{
+	global $MYSQLI;
+	$query = 'SELECT `value` FROM `settings` WHERE `key` = \'best_score\';';
+	$result = $MYSQLI->query($query);
+	$best_score = $result->fetch_assoc();
+	$result->close();
+	return intval($best_score['value']);
+}
+
+function best_score_update()
+{
+	global $MYSQLI, $SCORE;
+
+	if ($SCORE <= best_score())
+	{
+		return;
+	}
+
+	$query = 'UPDATE `settings` SET `value` = ? WHERE `key` = \'best_score\';';
+	$stmt = $MYSQLI->prepare($query);
+	$stmt->bind_param('i', $SCORE);
+	$stmt->execute() or die('MySQL Error: ' . $MYSQLI->error.__LINE__);
+	$stmt->close();
 }
 
 function clear()
@@ -77,7 +104,7 @@ function move($from, $move)
 
 function move_grid($move)
 {
-	global $GRID;
+	global $GRID, $SCORE;
 	$merged = array();
 	$moved = false;
 
@@ -122,6 +149,7 @@ function move_grid($move)
 						$GRID[$x][$y2] = -1;
 						$y2--;
 						$GRID[$x][$y2] = $tile * 2;
+						$SCORE += $GRID[$x][$y2];
 						$merged[$x][$y2] = true;
 						$moved = true;
 					}
@@ -160,6 +188,7 @@ function move_grid($move)
 						$GRID[$x2][$y] = -1;
 						$x2++;
 						$GRID[$x2][$y] = $tile * 2;
+						$SCORE += $GRID[$x2][$y];
 						$merged[$x2][$y] = true;
 						$moved = true;
 					}
@@ -198,6 +227,7 @@ function move_grid($move)
 						$GRID[$x][$y2] = -1;
 						$y2++;
 						$GRID[$x][$y2] = $tile * 2;
+						$SCORE += $GRID[$x][$y2];
 						$merged[$x][$y2] = true;
 						$moved = true;
 					}
@@ -236,6 +266,7 @@ function move_grid($move)
 						$GRID[$x2][$y] = -1;
 						$x2--;
 						$GRID[$x2][$y] = $tile * 2;
+						$SCORE += $GRID[$x2][$y];
 						$merged[$x2][$y] = true;
 						$moved = true;
 					}
@@ -313,16 +344,18 @@ if ($_POST['text'])
 	{
 		move($_POST['from'], $move);
 	}
+
+	best_score_update();
 }
 
 // Clear Moves.
-if ($_POST['clear'])
+elseif ($_POST['clear'])
 {
 	clear();
 }
 
 // Read Moves.
-if ($_POST['read'])
+elseif ($_POST['read'])
 {
 	$moves = read();
 
@@ -332,7 +365,12 @@ if ($_POST['read'])
 		$moves = read();
 	}
 
-	echo json_encode(array('grid' => $GRID, 'moves' => $moves));
+	best_score_update();
+	echo json_encode(
+		array(
+			'best_score' => best_score(), 'grid' => $GRID, 'moves' => $moves
+		)
+	);
 	exit;
 }
 ?>

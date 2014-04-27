@@ -130,6 +130,8 @@ function read(rate)
 			moves_feed = feed.moves.slice(moves.length);
 			moving = true;
 			move_feed(moves_feed, rate);
+			gm.storageManager.setBestScore(feed.best_score);
+			gm.actuator.bestContainer.textContent = feed.best_score;
 			$('#grid').text(grid_text(feed.grid));
 		}
 	);
