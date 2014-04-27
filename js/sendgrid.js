@@ -102,6 +102,8 @@ function move_feed(feed, rate)
 
 function read(rate)
 {
+	var moves_feed;
+
 	if (moving)
 	{
 		return;
@@ -115,7 +117,17 @@ function read(rate)
 		{
 			// Feed the new moves.
 			var feed = jQuery.parseJSON(data);
-			var moves_feed = feed.moves.slice(moves.length);
+
+			if (
+				moves.length > 0 &&
+				(feed.moves.length <= 0 || moves[0].time != feed.moves[0].time)
+			)
+			{
+				moves = [];
+				gm.restart();
+			}
+
+			moves_feed = feed.moves.slice(moves.length);
 			moving = true;
 			move_feed(moves_feed, rate);
 			$('#grid').text(grid_text(feed.grid));

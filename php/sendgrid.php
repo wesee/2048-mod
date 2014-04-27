@@ -22,8 +22,7 @@ function clear()
 {
 	global $MYSQLI;
 	$query = 'TRUNCATE TABLE `moves`;';
-	$stmt = $MYSQLI->query($query);
-	$stmt->close();
+	$MYSQLI->query($query);
 }
 
 function clear_grid()
