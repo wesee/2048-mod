@@ -60,10 +60,10 @@ function move($from, $move)
 	$x = $random['x'];
 	$y = $random['y'];
 	// Insert move into database.
-	$query = 'INSERT INTO `moves` (`from`, `move`, `tile`, `x`, `y`)
-		VALUES (?, ?, ?, ?, ?);';
+	$query = 'INSERT INTO `moves` (`from`, `move`, `tile`, `x`, `y`, `time`)
+		VALUES (?, ?, ?, ?, ?, ?);';
 	$stmt = $MYSQLI->prepare($query);
-	$stmt->bind_param('siiii', $from, $move, $tile, $x, $y);
+	$stmt->bind_param('siiiii', $from, $move, $tile, $x, $y, mktime());
 	$stmt->execute() or die(
 		'MySQL Error: ' . $MYSQLI->error.__LINE__
 	);
@@ -237,7 +237,7 @@ function read()
 	global $GRID, $MYSQLI;
 	clear_grid();
 	$moves = array();
-	$query = 'SELECT `from`, `move`, `tile`, `x`, `y`
+	$query = 'SELECT `from`, `move`, `tile`, `x`, `y`, `time`
 		FROM `moves` ORDER BY `id`;';
 	$result = $MYSQLI->query($query);
 
