@@ -17,9 +17,9 @@
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1, user-scalable=no, minimal-ui">
 </head>
 <body>
-  <div class="container" style="width: 1100px;">
+  <div class="container">
     <div class="heading">
-      <h1 class="title"><img src="images/hackbu.png" style="width: 80px; height: 80px;" /> 2048-SendGrid</h1>
+      <h1 class="title"><img src="images/hackbu.png" style="width: 40px; height: 40px;" /></h1>
       <div class="scores-container">
         <div class="score-container">0</div>
         <div class="best-container">0</div>
@@ -27,60 +27,57 @@
     </div>
 
     <div class="above-game">
-      <p class="game-intro">Play <strong>2048</strong> via E-Mail (Powered by <a href="http://sendgrid.com/" target="_blank">SendGrid</a>)!</p>
+      <p class="game-intro">Play <strong>2048</strong> via E-Mail!</p>
     </div>
 
-	<div style="width: 500px; height: 530px; vertical-align: middle; display: inline-block;">
-      <div class="game-container">
-        <div class="game-message">
-          <p></p>
-          <div class="lower">
-	          <a class="keep-playing-button">Keep going</a>
-            <a class="retry-button">Try again</a>
-          </div>
+    <div class="game-container">
+      <div class="game-message">
+        <p></p>
+        <div class="lower">
+	        <a class="keep-playing-button">Keep going</a>
+          <a class="retry-button">Try again</a>
         </div>
+      </div>
 
-        <div class="grid-container">
-          <div class="grid-row">
-            <div class="grid-cell"></div>
-            <div class="grid-cell"></div>
-            <div class="grid-cell"></div>
-            <div class="grid-cell"></div>
-          </div>
-          <div class="grid-row">
-            <div class="grid-cell"></div>
-            <div class="grid-cell"></div>
-            <div class="grid-cell"></div>
-            <div class="grid-cell"></div>
-          </div>
-          <div class="grid-row">
-            <div class="grid-cell"></div>
-            <div class="grid-cell"></div>
-            <div class="grid-cell"></div>
-            <div class="grid-cell"></div>
-          </div>
-          <div class="grid-row">
-            <div class="grid-cell"></div>
-            <div class="grid-cell"></div>
-            <div class="grid-cell"></div>
-            <div class="grid-cell"></div>
-          </div>
+      <div class="grid-container">
+        <div class="grid-row">
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
         </div>
-
-        <div class="tile-container">
-
+        <div class="grid-row">
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
         </div>
-	  </div>
-	</div>
+        <div class="grid-row">
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+        </div>
+        <div class="grid-row">
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+        </div>
+      </div>
 
-	<div style="width: 500px; height: 530px; display: inline-block; float: right;">
-	  <p>Move log:</p>
-      <div id="log" style="background-image: url(images/hackbu-translucent.png); background-size: 100%; width: 100%; height: 100%; overflow: scroll; overflow-x: hidden;"></div>
-	</div>
+      <div class="tile-container">
+
+      </div>
+    </div>
 
     <p class="game-explanation">
       <strong class="important">How to play:</strong> E-Mail your move (Up, Down, Left, or Right) in the body to  <strong>move@2048.bymail.in</strong> to move the tiles. When two tiles with the same number touch, they <strong>merge into one!</strong>
     </p>
+    <hr>
+	<p>Move log:</p>
+    <div id="log" style="background-image: url(images/hackbu-translucent.png); background-size: 100%; width: 100%; height: 530px; overflow: scroll; overflow-x: hidden;">
+	</div>
 	<hr>
 	<p>Server-side grid:</p>
     <pre id="grid" style="text-align: center;">
@@ -109,13 +106,5 @@
   <script src="js/application.js"></script>
   <script src="js/jquery.js"></script>
   <script src="js/sendgrid.js"></script>
-  <script type="text/javascript">
-    <!--
-    if (mobile)
-	{
-      document.location = 'mobile.html';
-    }
-    //-->
-  </script>
 </body>
 </html>
