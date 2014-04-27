@@ -383,12 +383,12 @@ elseif ($_POST['read'])
 	}
 
 	best_score_update();
-	game_over();
 	echo json_encode(
 		array(
 			'best_score' => best_score(), 'grid' => $GRID, 'moves' => $moves
 		)
 	);
+	game_over();
 	exit;
 }
 ?>
