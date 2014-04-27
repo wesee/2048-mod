@@ -264,6 +264,7 @@ function tile_random()
 // Handle E-Mail.
 if ($_POST['text'])
 {
+	read();
 	$move = move_parse($_POST['text']);
 
 	if ($move !== false)
