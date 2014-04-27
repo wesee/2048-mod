@@ -4,6 +4,11 @@ var moving = false;
 var rate_move = 500;
 var rate_refresh = 1000;
 
+String.prototype.repeat = function( num )
+{
+    return new Array( num + 1 ).join( this );
+}
+
 function clear()
 {
 	//moves = [];
@@ -24,11 +29,12 @@ function grid_text(grid)
 		{
 			if (grid[x][y] >= 2)
 			{
-				text += grid[x][y];
+				tile = grid[x][y] + '';
+				text += tile + ' '.repeat(4 - tile.length);
 			}
 			else
 			{
-				text += ' ';
+				text += '    ';
 			}
 
 			text += '|';
