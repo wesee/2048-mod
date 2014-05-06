@@ -22,32 +22,37 @@ for ($x = 0; $x < 4; $x++)
 function best_score()
 {
 	global $MYSQLI;
-	$query = 'SELECT `value` FROM `settings` WHERE `key` = \'best_score\';';
+	$query = 'SELECT `score` FROM `games` ORDER BY `score` DESC LIMIT 1;';
 	$result = $MYSQLI->query($query);
 	$best_score = $result->fetch_assoc();
 	$result->close();
-	return intval($best_score['value']);
-}
-
-function best_score_update()
-{
-	global $MYSQLI, $SCORE;
-
-	if ($SCORE <= best_score())
-	{
-		return;
-	}
-
-	$query = 'UPDATE `settings` SET `value` = ? WHERE `key` = \'best_score\';';
-	$stmt = $MYSQLI->prepare($query);
-	$stmt->bind_param('i', $SCORE);
-	$stmt->execute() or die('MySQL Error: ' . $MYSQLI->error.__LINE__);
-	$stmt->close();
+	return intval($best_score['score']);
 }
 
 function clear()
 {
 	global $MYSQLI;
+	$players = array();
+	$query = 'SELECT `from` FROM `moves` WHERE `move` != -1 GROUP BY `from`;';
+	$result = $MYSQLI->query($query);
+
+	while ($player = $result->fetch_assoc())
+	{
+		$players[] = $player;
+	}
+	$result->close();
+
+	$query = 'INSERT INTO `games` (`score`, `grid`, `players`)
+		VALUES (?, ?, ?);';
+	$stmt = $MYSQLI->prepare($query);
+	$stmt->bind_param(
+		'iss', $SCORE, json_encode($GRID), json_encode($players)
+	);
+	$stmt->execute() or die(
+		'MySQL Error: ' . $MYSQLI->error.__LINE__
+	);
+	$stmt->close();
+
 	$query = 'TRUNCATE TABLE `moves`;';
 	$MYSQLI->query($query);
 	return 'Success';
@@ -367,7 +372,6 @@ if ($_POST['text'])
 		echo move($from[0], $move);
 	}
 
-	best_score_update();
 	game_over();
 }
 
@@ -388,7 +392,6 @@ elseif ($_POST['read'])
 		$moves = read();
 	}
 
-	best_score_update();
 	echo json_encode(
 		array(
 			'best_score' => best_score(), 'grid' => $GRID, 'moves' => $moves
