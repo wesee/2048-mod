@@ -31,14 +31,14 @@ function best_score()
 
 function clear()
 {
-	global $MYSQLI;
+	global $GRID, $MYSQLI, $SCORE;
 	$players = array();
 	$query = 'SELECT `from` FROM `moves` WHERE `move` != -1 GROUP BY `from`;';
 	$result = $MYSQLI->query($query);
 
 	while ($player = $result->fetch_assoc())
 	{
-		$players[] = $player;
+		$players[] = $player['from'];
 	}
 	$result->close();
 
